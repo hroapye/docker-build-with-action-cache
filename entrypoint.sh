@@ -155,9 +155,8 @@ load_cached_stages() {
   
   for file in ./images/stage-*.img
   do
-    docker load -i file 2> /dev/null | tee "$PULL_STAGES_LOG" || ;
+    docker load -i $file 2> /dev/null | tee "$PULL_STAGES_LOG" || true
   done
-  true
 }
 
 save_stages() {
