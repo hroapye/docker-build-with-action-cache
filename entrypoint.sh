@@ -144,6 +144,7 @@ pull_cached_stages() {
     return
   fi
   echo -e "\n[Action Step] Pulling image..."
+  docker inspect "$(_get_full_image_name)"-stages:1 || true
   docker pull --all-tags "$(_get_full_image_name)"-stages 2> /dev/null | tee "$PULL_STAGES_LOG" || true
 }
 
