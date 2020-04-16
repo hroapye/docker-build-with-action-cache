@@ -162,7 +162,7 @@ load_cached_stages() {
 save_stages() {
   local stage_number=1
   local stage_image
-  mkdir ./images || true
+  mkdir -p ./images
   for stage in $(_get_stages); do
     echo -e "\nPushing stage: $stage_number"
     stage_image=$(_get_full_image_name)-stages:$stage_number
