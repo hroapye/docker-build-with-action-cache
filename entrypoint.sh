@@ -154,7 +154,7 @@ load_cached_stages() {
   echo -e "\n[Action Step] Loading image..."
   
   find ./
-  for file in ./images/stage-*.img
+  for file in ./images/stage-*
   do
     echo $file
     docker load -i $file 2> /dev/null | tee "$PULL_STAGES_LOG" || true
@@ -168,7 +168,7 @@ save_stages() {
     echo -e "\nPushing stage: $stage_number"
     stage_image=$(_get_full_image_name)-stages:$stage_number
     docker tag "$stage" "$stage_image"
-    docker save -o ./images/stage-$stage_number.img $stage_image
+    docker save -o ./images/stage-${stage_number}.img $stage_image
     stage_number=$(( stage_number+1 ))
   done
 
@@ -176,7 +176,7 @@ save_stages() {
   echo -e "\nSaving stage: $stage_number"
   stage_image=$(_get_full_image_name)-stages:$stage_number
   docker tag $dummy_image_name $stage_image
-  docker save -o ./images/stage-$stage_number.img $stage_image
+  docker save -o ./images/stage-${stage_number}.img $stage_image
 }
 
 build_image() {
