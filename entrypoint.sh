@@ -168,7 +168,9 @@ save_stages() {
     echo -e "\nPushing stage: $stage_number"
     stage_image=$(_get_full_image_name)-stages:$stage_number
     docker tag "$stage" "$stage_image"
-    docker save -o ./images/stage-${stage_number}.img $stage_image
+    image_file=./images/stage-${stage_number}.img
+    echo "save image file: $image_file"
+    docker save -o $image_file $stage_image
     stage_number=$(( stage_number+1 ))
   done
 
@@ -176,7 +178,9 @@ save_stages() {
   echo -e "\nSaving stage: $stage_number"
   stage_image=$(_get_full_image_name)-stages:$stage_number
   docker tag $dummy_image_name $stage_image
-  docker save -o ./images/stage-${stage_number}.img $stage_image
+  image_file=./images/stage-${stage_number}.img
+  echo "save image file: $image_file"
+  docker save -o $image_file $stage_image
 }
 
 build_image() {
