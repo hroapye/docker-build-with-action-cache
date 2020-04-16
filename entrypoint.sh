@@ -22,6 +22,12 @@ _get_max_stage_number() {
     tail -n 1
 }
 
+_get_load_max_stage_number() {
+  sed -nr 's/^Loaded image:.+:([0-9]+)+$/\1/p' "$PULL_STAGES_LOG" |
+    sort -n |
+    tail -n 1
+}
+
 _get_stages() {
   grep -EB1 '^Step [0-9]+/[0-9]+ : FROM' "$BUILD_LOG" |
     sed -rn 's/ *-*> (.+)/\1/p'
@@ -159,18 +165,22 @@ save_stages() {
   local stage_image
   for stage in $(_get_stages); do
     echo -e "\nPushing stage: $stage_number"
-    docker save -o ./images/stage-$stage_number.img
+    stage_image=$(_get_full_image_name)-stages:$stage_number
+    docker tag "$stage" "$stage_image"
+    docker save -o ./images/stage-$stage_number.img $stage_image
     stage_number=$(( stage_number+1 ))
   done
 
   # push the image itself as a stage (the last one)
   echo -e "\nSaving stage: $stage_number"
-  docker save -o ./images/stage-$stage_number.img
+  stage_image=$(_get_full_image_name)-stages:$stage_number
+  docker tag "$stage" "$stage_image"
+  docker save -o ./images/stage-$stage_number.img $stage_image
 }
 
 build_image() {
   echo -e "\n[Action Step] Building image..."
-  max_stage=$(_get_max_stage_number)
+  max_stage=$(_get_load_max_stage_number)
 
   # create param to use (multiple) --cache-from options
   if [ "$max_stage" ]; then
