@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 dummy_image_name=my_awesome_image
 # split tags (to allow multiple comma-separated tags)
