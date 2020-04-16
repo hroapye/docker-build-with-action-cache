@@ -153,6 +153,7 @@ load_cached_stages() {
   fi
   echo -e "\n[Action Step] Loading image..."
   
+  find ./
   for file in ./images/stage-*.img
   do
     echo $file
