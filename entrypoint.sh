@@ -141,6 +141,33 @@ pull_cached_stages() {
   docker pull --all-tags "$(_get_full_image_name)"-stages 2> /dev/null | tee "$PULL_STAGES_LOG" || true
 }
 
+load_cached_stages() {
+  if [ "$INPUT_PULL_IMAGE_AND_STAGES" != true ]; then
+    return
+  fi
+  echo -e "\n[Action Step] Loading image..."
+  
+  for file in ./images/stage-*.img
+  do
+    docker load -i file 2> /dev/null | tee "$PULL_STAGES_LOG" || 
+  done
+  true
+}
+
+save_stages() {
+  local stage_number=1
+  local stage_image
+  for stage in $(_get_stages); do
+    echo -e "\nPushing stage: $stage_number"
+    docker save -o ./images/stage-$stage_number.img
+    stage_number=$(( stage_number+1 ))
+  done
+
+  # push the image itself as a stage (the last one)
+  echo -e "\nSaving stage: $stage_number"
+  docker save -o ./images/stage-$stage_number.img
+}
+
 build_image() {
   echo -e "\n[Action Step] Building image..."
   max_stage=$(_get_max_stage_number)
@@ -184,7 +211,7 @@ push_image_and_stages() {
 
   echo -e "\n[Action Step] Pushing image..."
   _push_image_tags
-  _push_image_stages
+#   _push_image_stages
 }
 
 logout_from_registry() {
@@ -199,8 +226,10 @@ logout_from_registry() {
 # run the action
 check_required_input
 login_to_registry
-pull_cached_stages
+# pull_cached_stages
+load_cached_stages
 build_image
 tag_image
 push_image_and_stages
+save_stages
 logout_from_registry
