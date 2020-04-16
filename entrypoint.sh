@@ -153,10 +153,8 @@ load_cached_stages() {
   fi
   echo -e "\n[Action Step] Loading image..."
   
-  find ./
   for file in ./images/stage-*
   do
-    echo $file
     docker load -i $file 2> /dev/null | tee "$PULL_STAGES_LOG" || true
   done
 }
