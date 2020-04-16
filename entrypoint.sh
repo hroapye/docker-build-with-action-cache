@@ -185,7 +185,7 @@ save_stages() {
 
 build_image() {
   echo -e "\n[Action Step] Building image..."
-  max_stage=$(_get_load_max_stage_number)
+  max_stage=$(_get_max_stage_number)
   echo "max_stage is $max_stage"
 
   # create param to use (multiple) --cache-from options
@@ -227,7 +227,7 @@ push_image_and_stages() {
 
   echo -e "\n[Action Step] Pushing image..."
   _push_image_tags
-#   _push_image_stages
+  _push_image_stages
 }
 
 logout_from_registry() {
@@ -242,8 +242,8 @@ logout_from_registry() {
 # run the action
 check_required_input
 login_to_registry
-# pull_cached_stages
 load_cached_stages
+pull_cached_stages
 build_image
 tag_image
 save_stages
