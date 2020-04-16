@@ -173,7 +173,7 @@ save_stages() {
   # push the image itself as a stage (the last one)
   echo -e "\nSaving stage: $stage_number"
   stage_image=$(_get_full_image_name)-stages:$stage_number
-  docker tag "$stage" "$stage_image"
+  docker tag $dummy_image_name $stage_image
   docker save -o ./images/stage-$stage_number.img $stage_image
 }
 
