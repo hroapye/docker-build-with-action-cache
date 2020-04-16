@@ -182,6 +182,7 @@ save_stages() {
   image_file=./images/stage-${stage_number}.img
   echo "save image file: $image_file"
   docker save -o $image_file $stage_image
+  chown -R a+r ./images
 }
 
 build_image() {
