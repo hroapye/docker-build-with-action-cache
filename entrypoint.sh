@@ -155,6 +155,7 @@ load_cached_stages() {
   
   for file in ./images/stage-*.img
   do
+    echo $file
     docker load -i $file 2> /dev/null | tee "$PULL_STAGES_LOG" || true
   done
 }
@@ -180,6 +181,7 @@ save_stages() {
 build_image() {
   echo -e "\n[Action Step] Building image..."
   max_stage=$(_get_load_max_stage_number)
+  echo "max_stage is $max_stage"
 
   # create param to use (multiple) --cache-from options
   if [ "$max_stage" ]; then
